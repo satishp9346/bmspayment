@@ -18,7 +18,6 @@ function Payment() {
         console.log(err.message);
       }
     };
-
     fetchData();
   }, []);
   const HandlePut=()=>{
