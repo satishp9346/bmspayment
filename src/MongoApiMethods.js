@@ -3,7 +3,7 @@ const mongoose=require('mongoose');
 const {Schema}= mongoose;
 const cors=require('cors');
 const corsoptions={
-    origin:"http://localhost:3001"
+    origin:"https://bmspayment.vercel.app/"
 };
 const app=express();
 app.use(cors(corsoptions))
@@ -54,7 +54,7 @@ app.put('/Updatedata/:id',async (req,res)=>{
             console.log("nothing found");
         }
         else{
-            console.log(data)
+            console.log(result)
         }
     }
     catch(err){

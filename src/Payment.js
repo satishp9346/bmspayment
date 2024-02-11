@@ -8,7 +8,7 @@ function Payment() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get('http://localhost:4002/Getdata');
+        const result = await axios.get('https://bsmserver.onrender.com/Getdata');
         const data = result.data;
         if (data.length > 0) {
           const item = data[0];
@@ -22,9 +22,10 @@ function Payment() {
     fetchData();
   }, []);
   const HandlePut=()=>{
-    axios.put('http://localhost:4002/Updatedata/1',{
+    axios.put('https://bsmserver.onrender.com/Updatedata/1',{
       totalAmount:totalAmount,
-      displayButton:false
+      displayButton:false,
+
     })
     .then((response)=>{console.log(response.data)})
     .catch((err)=>{console.log(err.message)})
@@ -38,7 +39,7 @@ function Payment() {
             &#8377;
             <input type="text" value={totalAmount} />
         </div>
-        <div className='desc'>Please Make Payment of  &#8377;999 for Booking Tickets</div>
+        <div className='desc'>Please Make Payment of  &#8377;{totalAmount} for Booking Tickets</div>
         {
           (()=>{
             if(!a){
