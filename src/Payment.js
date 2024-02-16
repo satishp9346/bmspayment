@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios';
+import { BeatLoader} from 'react-spinners';
+
+
 function Payment() {
   const [a,setA]=useState(true);
-  const [displayButtoninScannerpage,setDisplayButton]=useState(true);
-  const [totalAmount,setTotalAmount]=useState("0")
+  
+  const [loader,setLoader]=useState(false);
+
+  const [DBdata,setDBdata]=useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -12,7 +17,7 @@ function Payment() {
         const data = result.data;
         if (data.length > 0) {
           const item = data[0];
-          setTotalAmount(item.totalAmount);
+          setDBdata(item);
         }
       } catch (err) {
         console.log(err.message);
@@ -22,34 +27,39 @@ function Payment() {
   }, []);
   const HandlePut=()=>{
     axios.put('https://bsmserver.onrender.com/Updatedata/1',{
-      totalAmount:totalAmount,
+      totalAmount:DBdata.totalAmount,
       displayButton:false,
-
+      Name:DBdata.Name
     })
-    .then((response)=>{console.log(response.data)})
+    .then((response)=>{})
     .catch((err)=>{console.log(err.message)})
   }
 
   return (
     <div className='payment'>
         <div className='bankicon'><i className='fa fa-bank' style={{color:"blue",fontSize:"40px"}}></i></div>
-        <div className='username'>Satish Perugu</div>
+        <div className='username'>{DBdata.Name}</div>
         <div className='amount'>
-            &#8377;
-            <input type="text" value={totalAmount} />
+          <span className='amount1'>
+            <h2>&#8377;</h2>
+            <input type="text" className='amount1_1' value={DBdata.totalAmount} />
+          </span>
         </div>
-        <div className='desc'>Please Make Payment of  &#8377;{totalAmount} for Booking Tickets</div>
+        <div className='desc'>Please Make Payment of  &#8377;{DBdata.totalAmount} for Booking Tickets</div>
+        <div className='paybtn'>
         {
-          (()=>{
-            if(!a){
-              return <button className='btn btn-success' id='paybtn' >Payment Sucessful</button>
-            }
-            else{
-              return <button className='btn btn-primary' id='paybtn' onClick={()=>{setTimeout(()=>{setA(false);setDisplayButton(false);HandlePut()},5000)}}>Pay Securly</button>
-            }
-          })()
-        }
-        
+          !a?(
+            <button className='btn btn-success' id='paybtn' >Payment Sucessful</button>        
+          ) : loader?(<BeatLoader
+            color={'#fff'}
+            loading={loader}
+            size={25}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+            className='beatLoder'
+            />) : (<button className='btn btn-primary' id='paybtn' onClick={()=>{setLoader(true);setInterval(()=>{setA(false);HandlePut()},7000);}}>Pay Securly</button>)
+          }
+          </div>
        
     </div>
   )
